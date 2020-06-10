@@ -15,10 +15,13 @@ class DataHandle:
           row = [row]
           self.add(row)
           self.total += 1
+
   def init(self, col_name):
     self.DataSet = np.array([col_name])
+
   def add(self, data):
     self.DataSet = np.append(self.DataSet, data, axis=0)
+
   def split(self, ratio):
     self.TestData = np.array([self.DataSet[0]])
     self.TrainData = np.array([self.DataSet[0]])
@@ -27,13 +30,17 @@ class DataHandle:
         continue
       if random.random() < ratio:
         self.TrainData = np.append(self.TrainData, [data], axis=0)
+        self.TrainLabel.append(data[-1])
       else:
         self.TestData = np.append(self.TestData, [data], axis=0)
+        self.TestLabel.append(data[-1])
   def __init__(self):
     self.total = 0
     self.DataSet = np.array([[]])
     self.TrainData = np.array([[]])
+    self.TrainLabel = []
     self.TestData = np.array([[]])
+    self.TestLabel = []
 
 DATA = DataHandle()
 DATA.read(DATASET1)
