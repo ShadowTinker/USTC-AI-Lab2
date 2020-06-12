@@ -114,12 +114,8 @@ class SVM:
             # update alpha_i
             alphas[i] = alphas[i] + self.label[i] * self.label[j] * (alpha_j - alphas[j])
             # update the bias
-            b1 = bias - E[i] - self.label[i] * (alphas[i] - alpha_i) * \
-                self.K.KernelMatrix[i, j] - self.label[j] * (alphas[j] - alpha_j) * \
-                self.K.KernelMatrix[i, j]
-            b2 = bias - E[j] - self.label[i] * (alphas[i] - alpha_i) * \
-                self.K.KernelMatrix[i, j] - self.label[j] * (alphas[j] - alpha_j) * \
-                self.K.KernelMatrix[j, j]
+            b1 = bias - E[i] - self.label[i] * (alphas[i] - alpha_i) * self.K.KernelMatrix[i, j] - self.label[j] * (alphas[j] - alpha_j) * self.K.KernelMatrix[i, j]
+            b2 = bias - E[j] - self.label[i] * (alphas[i] - alpha_i) * self.K.KernelMatrix[i, j] - self.label[j] * (alphas[j] - alpha_j) * self.K.KernelMatrix[j, j]
             if 0 < alphas[i] < self.C:
               bias = b1
             elif 0 < alphas[j] < self.C:
@@ -170,14 +166,15 @@ class SVM:
           self.les.append(le)
       data = data.astype('int')
       # label processing
+      label = label.astype('int')
       label = np.where(label < 10, -1, 1)
     return data, label
 
   def fit(self, data, label):
-    data, label = self.preprocess(data, label)
+    self.data, self.label = self.preprocess(data, label)
     self.alphas = np.zeros((data.shape[0], 1), dtype=float)
-    KernelFunction = self.KernelFunction(self.kerner, data)
-    smo = self.SMO(data, label, KernelFunction, self.C)
+    KernelFunction = self.KernelFunction(self.kerner, self.data)
+    smo = self.SMO(self.data, self.label, KernelFunction, self.C)
     self.sv, self.sl, self.alphas, self.bias, self.weight = smo.train(max_iteration=3)
 
   def predict(self, data, label):
@@ -186,7 +183,7 @@ class SVM:
     Y = np.array([])
     prediction = np.zeros((DataNumber, 1))
     if self.kerner == 'linear':
-      Y = data @ self.weight + self.bias
+      Y = np.sum(data @ self.weight + self.bias)
     elif self.kerner == 'rbf':
       Xsq = np.sum(np.power(data, 2), axis = 1).reshape(-1, 1)
       SVsq = (np.sum(np.power(self.sv, 2), axis = 1)).T
@@ -216,9 +213,13 @@ class SVM:
           FN += 1
         else:
           TN += 1
-    P = TP / (TP + FP)
-    R = TP / (TP + FN)
-    self.result = 2 * P * R / (P + R)
+    if TP == 0 and FP == 0:
+      P = TN / (TN + FN)
+      self.result = 'There is no F1 score, because all the data are predicted to be negative. And the precision rate is ' + str(P)
+    else:
+      P = TP / (TP + FP)
+      R = TP / (TP + FN)
+      self.result = 2 * P * R / (P + R)
 
 
   def __init__(self, C=1.0, kernel='rbf', loss='hinge', cut=True, sigma=1):

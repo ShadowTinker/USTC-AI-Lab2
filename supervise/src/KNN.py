@@ -14,11 +14,8 @@ class KNN:
           self.les.append(le)
       data = data.astype('int')
       # label processing
-      for i in range(len(label)):
-        if int(label[i]) < 10:
-          label[i] = 0
-        else:
-          label[i] = 1
+      label = label.astype('int')
+      label = np.where(label < 10, 0, 1)
     else:
       # data processing
       for col in range(data.shape[1]):
@@ -30,11 +27,8 @@ class KNN:
           self.les.append(le)
       data = data.astype('int')
       # label processing
-      for i in range(len(label)):
-        if int(label[i]) < 10:
-          label[i] = 0
-        else:
-          label[i] = 1
+      label = label.astype('int')
+      label = np.where(label < 10, 0, 1)
     return data, label
 
   def fit(self, data, label):
@@ -47,8 +41,9 @@ class KNN:
       # calculate all the distances
       distances = []
       for index, train_data in enumerate(self.data):
+        distance = 0
         for title in range(len(train_data)):
-          distance = (test_data[title] - train_data[title]) ** 2
+          distance += (test_data[title] - train_data[title]) ** 2
         distances.append([distance, self.label[index]])
       distances.sort()
       # make a prediction according to the distances calculated above

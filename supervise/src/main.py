@@ -70,8 +70,9 @@ DATA.split(0.7)
 # classifier.fit(DATA.TrainData, DATA.TrainLabel)
 # classifier.predict(DATA.TestData, DATA.TestLabel)
 # print(classifier.result)
+
 # SVM
-classifier = SVM(C=1., kernel='rbf')
+classifier = SVM(C=1., kernel='linear', cut=True)
 classifier.fit(DATA.TrainData, DATA.TrainLabel)
 classifier.predict(DATA.TestData, DATA.TestLabel)
 print(classifier.result)
