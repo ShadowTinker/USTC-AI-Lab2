@@ -3,6 +3,7 @@ import numpy as np
 import random
 from KNN import KNN
 from SVM import SVM
+TestData = 'supervise/data/student-mat.csv'
 DATASET1 = '../data/student-mat.csv'
 DATASET2 = '../data/student-por.csv'
 class DataHandle:
@@ -34,13 +35,19 @@ class DataHandle:
           self.TrainData = np.array([data])
         else:
           self.TrainData = np.append(self.TrainData, [data], axis=0)
-        self.TrainLabel.append(data[-1])
+        if self.TrainLabel.size == 0:
+          self.TrainLabel = np.array(data[-1])
+        else:
+          self.TrainLabel = np.append(self.TrainLabel, data[-1])
       else:
         if self.TestData.size == 0:
           self.TestData = np.array([data])
         else:
           self.TestData = np.append(self.TestData, [data], axis=0)
-        self.TestLabel.append(data[-1])
+        if self.TestLabel.size == 0:
+          self.TestLabel = np.array(data[-1])
+        else:
+          self.TestLabel = np.append(self.TestLabel, data[-1])
     self.TestData = np.delete(self.TestData, -1, 1)
     self.TrainData = np.delete(self.TrainData, -1, 1)
     
@@ -49,18 +56,22 @@ class DataHandle:
     self.title = []
     self.DataSet = np.array([[]])
     self.TrainData = np.array([[]])
-    self.TrainLabel = []
+    self.TrainLabel = np.array([])
     self.TestData = np.array([[]])
-    self.TestLabel = []
+    self.TestLabel = np.array([])
 
 # Data handling
 DATA = DataHandle()
-DATA.read(DATASET2)
+DATA.read(DATASET1)
 DATA.split(0.7)
 
 # KNN
-classifier = KNN(K=10, cut=True)
+# classifier = KNN(K=10, cut=True)
+# classifier.fit(DATA.TrainData, DATA.TrainLabel)
+# classifier.predict(DATA.TestData, DATA.TestLabel)
+# print(classifier.result)
+# SVM
+classifier = SVM(C=1., kernel='rbf')
 classifier.fit(DATA.TrainData, DATA.TrainLabel)
 classifier.predict(DATA.TestData, DATA.TestLabel)
 print(classifier.result)
-# SVM
