@@ -3,6 +3,7 @@ import numpy as np
 import random
 from KNN import KNN
 from SVM import SVM
+from LogisticRegression import LogisticRegression
 TestData = 'supervise/data/student-mat.csv'
 DATASET1 = '../data/student-mat.csv'
 DATASET2 = '../data/student-por.csv'
@@ -72,7 +73,14 @@ DATA.split(0.7)
 # print(classifier.result)
 
 # SVM
-classifier = SVM(C=1., kernel='linear', cut=True)
+# classifier = SVM(C=1., kernel='linear', cut=True)
+# classifier.fit(DATA.TrainData, DATA.TrainLabel)
+# classifier.predict(DATA.TestData, DATA.TestLabel)
+# print(classifier.result)
+
+# Logistic Regression
+classifier = LogisticRegression(alpha=0.0001, iteration=100000, cut=False)
 classifier.fit(DATA.TrainData, DATA.TrainLabel)
 classifier.predict(DATA.TestData, DATA.TestLabel)
 print(classifier.result)
+
