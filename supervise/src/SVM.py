@@ -75,6 +75,7 @@ class SVM:
       while(times < max_iteration):
         # set the flag of stoping iteration
         changed = False;
+        # the following iteration's reference is Stanford CS 229 SMO algorithm
         for i in range(DataNumber):
           # compute the model value
           E[i] = np.sum(alphas * self.label * self.K.KernelMatrix[:, i].reshape(-1,1)) + bias - self.label[i]
@@ -133,7 +134,6 @@ class SVM:
       corre_alphas = alphas[chosen.reshape(1, -1)[0]]
       weight = ((alphas * self.label).T @ self.data).T
       return support_vector, corre_label, corre_alphas, bias, weight
-
 
     def __init__(self, data, label, KernelMatrix, C):
       self.data = data

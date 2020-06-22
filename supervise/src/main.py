@@ -67,20 +67,20 @@ DATA.read(DATASET1)
 DATA.split(0.7)
 
 # KNN
-# classifier = KNN(K=10, cut=True)
+# classifier = KNN(K=20, cut=False)
 # classifier.fit(DATA.TrainData, DATA.TrainLabel)
 # classifier.predict(DATA.TestData, DATA.TestLabel)
-# print(classifier.result)
+# print('F1 score of KNN is',classifier.result)
 
 # SVM
-# classifier = SVM(C=1., kernel='linear', cut=True)
+# classifier = SVM(C=5., kernel='rbf', cut=True, sigma = 1)
 # classifier.fit(DATA.TrainData, DATA.TrainLabel)
 # classifier.predict(DATA.TestData, DATA.TestLabel)
 # print(classifier.result)
 
 # Logistic Regression
-classifier = LogisticRegression(alpha=0.0001, iteration=100000, cut=False)
+classifier = LogisticRegression(alpha=0.0001, iteration=1000, cut=False)
 classifier.fit(DATA.TrainData, DATA.TrainLabel)
 classifier.predict(DATA.TestData, DATA.TestLabel)
-print(classifier.result)
+print('F1 score of logistic regression is', classifier.result)
 
